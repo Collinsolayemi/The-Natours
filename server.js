@@ -44,6 +44,11 @@ const testTour = new Tour({
   price: 345,
 });
 
+const test = new Tour({
+  name: 'The Sailing Ship',
+  price: 345,
+});
+
 // testTour
 //   .save()
 //   .then((doc) => {
