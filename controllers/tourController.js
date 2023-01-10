@@ -128,6 +128,8 @@ exports.getOneTour = async (req, res) => {
 //   );
 // };
 
+
+
 exports.createTour = async (req, res) => {
   try {
     const newTour = await Tour.create(req.body);
