@@ -3,13 +3,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 const fs = require('fs');
 
-const dotenv = require('dotenv').config({ path: './config.env' });
+const dotenv = require('dotenv').config({ path: './.env' });
 const app = require('./apps');
 
-const DB = process.env.DATABASE.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD
-);
+// const DB = process.env.DATABASE.replace(
+//   '<PASSWORD>',
+//   process.env.DATABASE_PASSWORD
+// );
+
+const DB = process.env.DATABASE;
 
 mongoose
   .connect(DB, {
