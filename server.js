@@ -75,5 +75,3 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Apps running on port ${port}`);
 });
-
-//console.log(process.env);
