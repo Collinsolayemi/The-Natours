@@ -44,7 +44,6 @@ const testTour = new Tour({
   price: 345,
 });
 
-
 // testTour
 //   .save()
 //   .then((doc) => {
@@ -71,8 +70,6 @@ const testTour = new Tour({
 app.get('/', (req, res) => {
   res.send('servere');
 });
-
-
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
