@@ -26,6 +26,12 @@ const Tour = require('./../model/tourModel');
 //   next();
 // };
 
+exports.aliasTopTours = async (req, res, next) => {
+  (req.query.limit = '5'),
+    (req.query.sort = '-ratingAverage,price'),
+    (req.query.fields = 'name,price,ratingAverge,summary,difficulty');
+};
+
 exports.getAllTours = async (req, res) => {
   try {
     //BUILD A QUERY
@@ -39,7 +45,6 @@ exports.getAllTours = async (req, res) => {
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
 
     let query = Tour.find(JSON.parse(queryStr));
-    
 
     //2. Sorting
     if (req.query.sort) {
@@ -65,9 +70,8 @@ exports.getAllTours = async (req, res) => {
     query = query.skip(skip).limit(limit);
 
     if (req.query.page) {
-      const numTours = await Tour.countDocuments()
-      if (skip >= numTours) throw new Error('This page does not exist')
-
+      const numTours = await Tour.countDocuments();
+      if (skip >= numTours) throw new Error('This page does not exist');
     }
 
     // EXECUTE THE QUERY
@@ -127,8 +131,6 @@ exports.getOneTour = async (req, res) => {
 //     }
 //   );
 // };
-
-
 
 exports.createTour = async (req, res) => {
   try {
