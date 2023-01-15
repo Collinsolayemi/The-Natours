@@ -2,13 +2,14 @@ const fs = require('fs');
 const Tour = require('./../../model/tourModel');
 const mongoose = require('mongoose');
 const { dirname } = require('path');
-const dotenv = require('dotenv').config({ path: './config.env' });
+const dotenv = require('dotenv').config({ path: './.env' });
 
-const DB = process.env.DATABASE.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD
-);
+// const DB = process.env.DATABASE.replace(
+//   '<PASSWORD>',
+//   process.env.DATABASE_PASSWORD
+// );
 
+const DB = process.env.DATABASE;
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
@@ -52,4 +53,3 @@ if (process.argv[2] === '--import') {
   deleteData();
 }
 console.log(process.argv);
-

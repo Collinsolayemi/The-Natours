@@ -5,7 +5,6 @@ const fs = require('fs');
 
 const dotenv = require('dotenv').config({ path: './.env' });
 const app = require('./apps');
-
 // const DB = process.env.DATABASE.replace(
 //   '<PASSWORD>',
 //   process.env.DATABASE_PASSWORD
@@ -20,7 +19,7 @@ mongoose
     useFindAndModify: false,
     useUnifiedTopology: true,
   })
-  .then(() => console.log('DB connection succesful'));
+  .then(() => console.log('DB connected'));
 
 // const tourSchema = new mongoose.Schema({
 //   name: {

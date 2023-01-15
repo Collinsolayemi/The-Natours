@@ -14,11 +14,6 @@ if (process.env.NODE.ENV === 'development') {
 }
 
 app.use((req, res, next) => {
-  console.log('hello from the middleware');
-  next(); //we call it so we are able to use the middleware
-});
-
-app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
