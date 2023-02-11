@@ -7,17 +7,17 @@ const userRouter = require('./routes/userRoutes');
 const app = express();
 app.use(express.json()); //middleware
 
-//creating our own middleware
-
 if (process.env.NODE.ENV === 'development') {
   app.use(morgan('dev')); //middleware from npm(third-party middleware)
 }
 
-app.use((req, res, next) => {
-  req.requestTime = new Date().toISOString();
-  next();
-});
+//middleware
+// app.use((req, res, next) => {
+//   req.requestTime = new Date().toISOString();
+//   next();
+// });
 
+//imported middleware routes
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 
