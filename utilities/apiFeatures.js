@@ -1,3 +1,4 @@
+//creating an APIFeature class for better consupmtion by the controllers
 class APIfeature {
   constructor(query, queryString) {
     this.query = query;
