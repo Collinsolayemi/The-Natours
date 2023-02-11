@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+//creating a tour schema
 const tourSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -56,6 +57,9 @@ const tourSchema = new mongoose.Schema({
 });
 
 // creating a virtual properties
+tourSchema.virtual('durationWeeks').get(function () {
+  return this.duration / 7;
+});
 
 //creating a model
 const Tour = mongoose.model('Tour', tourSchema);
