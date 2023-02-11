@@ -19,5 +19,6 @@ router
   .delete(tourController.deleteTour);
 
 // router.post('/', tourController.createTour);
+router('/monthly-plan/:year').get(tourController.getMonthlyPlan);
 
 module.exports = router;
