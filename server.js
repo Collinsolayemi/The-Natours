@@ -14,6 +14,7 @@ const app = require('./apps');
 
 const DB = process.env.DATABASE;
 
+//mongoose connection
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
@@ -23,11 +24,12 @@ mongoose
   })
   .then(() => console.log('DB connected'));
 
-const testTour = new Tour({
-  name: 'The Sailing Ship',
-  price: 345,
-});
+// const testTour = new Tour({
+//   name: 'The Sailing Ship',
+//   price: 345,
+// });
 
+//starting the server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Apps running on port ${port}`);
