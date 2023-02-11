@@ -9,6 +9,7 @@ exports.aliasTopTours = (req, res, next) => {
   next();
 };
 
+//controller to get all tours
 exports.getAllTours = async (req, res) => {
   try {
     // EXECUTE THE QUERY
@@ -36,7 +37,7 @@ exports.getAllTours = async (req, res) => {
     });
   }
 };
-
+//controller to get one certain tour
 exports.getOneTour = async (req, res) => {
   try {
     const tour = await Tour.findById(req.params.id);
@@ -54,6 +55,7 @@ exports.getOneTour = async (req, res) => {
   }
 };
 
+//creating a new tour
 exports.createTour = async (req, res) => {
   try {
     const newTour = await Tour.create(req.body);
@@ -72,6 +74,7 @@ exports.createTour = async (req, res) => {
   }
 };
 
+//updating a tour
 exports.updateTour = async (req, res) => {
   try {
     const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
@@ -92,6 +95,7 @@ exports.updateTour = async (req, res) => {
   }
 };
 
+//deleting a tour
 exports.deleteTour = async (req, res) => {
   try {
     await Tour.findByIdAndDelete(req.params.id);
@@ -107,6 +111,7 @@ exports.deleteTour = async (req, res) => {
   }
 };
 
+//controller to get tour stats
 exports.getTourStats = async (req, res) => {
   try {
     const stats = await Tour.aggregate([
@@ -140,6 +145,7 @@ exports.getTourStats = async (req, res) => {
   }
 };
 
+//controller to get monthly tour plan
 exports.getMonthlyPlan = async (req, res) => {
   try {
     const year = req.params.year * 1;

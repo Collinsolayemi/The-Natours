@@ -55,6 +55,8 @@ const tourSchema = new mongoose.Schema({
   startDates: [Date],
 });
 
+// creating a virtual properties
+
 //creating a model
 const Tour = mongoose.model('Tour', tourSchema);
 
