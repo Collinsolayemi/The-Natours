@@ -1,3 +1,4 @@
+//controller to get all users
 exports.getAllUser = (req, res) => {
   res.status(500).json({
     status: 'error',
@@ -5,6 +6,7 @@ exports.getAllUser = (req, res) => {
   });
 };
 
+//controller to get a user
 exports.getUser = (req, res) => {
   res.status(500).json({
     status: 'error',
@@ -12,6 +14,7 @@ exports.getUser = (req, res) => {
   });
 };
 
+//controller to create a new user
 exports.createUser = (req, res) => {
   res.status(500).json({
     status: 'error',
@@ -19,6 +22,7 @@ exports.createUser = (req, res) => {
   });
 };
 
+//controller to update a  user
 exports.updateUser = (req, res) => {
   res.status(500).json({
     status: 'error',
@@ -26,6 +30,7 @@ exports.updateUser = (req, res) => {
   });
 };
 
+//controller to delete a user
 exports.deleteUser = (req, res) => {
   res.status(500).json({
     status: 'error',
