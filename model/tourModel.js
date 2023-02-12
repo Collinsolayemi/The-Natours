@@ -10,6 +10,7 @@ const tourSchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
+    slug: String,
     duration: {
       type: Number,
       required: [true, 'A tour must have a duration'],
@@ -64,14 +65,22 @@ const tourSchema = new mongoose.Schema(
 );
 
 // creating a virtual properties
-tourSchema.virtual('durationWeeks').get(function () {
-  return this.duration / 7;
-});
+// tourSchema.virtual('durationWeeks').get(function () {
+//   return this.duration / 7;
+// });
 
-//implementing a document middleware which run before .save() and .create()
-tourSchema.pre('save', function () {
-  console.log(this);
-});
+//implementing a document middleware which run before data saved in db....save() and .create()
+// tourSchema.pre('save', function (next) {
+// this.slug = slugify(this.name, { lower: true });
+//   next();
+// });
+
+//implementing a document middleware with post method which have access to the doc saved and next
+//the post start after the pre() have finish
+// tourSchema.post('save', function (doc, next) {
+// console.log(doc);
+//   next();
+// });
 
 //creating a model
 const Tour = mongoose.model('Tour', tourSchema);
