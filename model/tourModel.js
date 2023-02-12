@@ -87,7 +87,20 @@ const tourSchema = new mongoose.Schema(
 // });
 
 //QUERY MIDDLEWARE
-tourSchema.pre('find', function (next) {});
+// tourSchema.pre('find', function (next) {  or we use
+tourSchema.pre(/^find/, function (next) {
+  //it will work for any find or methos that start with find
+  this.find({ secretTour: { $ne: true } });
+  this.start = Date.now();
+  next();
+});
+
+//for a post request
+tourSchema.post(/^find/, function (docs, next) {
+  console.log(`Query took ${Date.now() - this.start} milliseconds`);
+  console.log(docs);
+  next();
+});
 
 //creating a model
 const Tour = mongoose.model('Tour', tourSchema);
