@@ -28,7 +28,7 @@ app.all('*', (req, res, next) => {
   next(new AppError(`Cant find ${req.originalUrl} on this server!`), 404);
 });
 
-app.use('', globalHandlerError);
+app.use(globalHandlerError);
 
 module.exports = app;
 //200 okay , 201 = created, 404 = err, 204 = delete , 500 = internal server error
