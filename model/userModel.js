@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const { validate } = require('./tourModel');
 
 //creating a model for the users
 const userSchema = new mongoose.Schema({
@@ -23,14 +22,19 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Please provide a  password'],
-    minlength: 8,
   },
   confirmPassword: {
     type: String,
     required: [true, 'Please confirm your password'],
+    validate: {
+      validator: function (el) {
+        return el === this.password;
+      },
+      message: 'Passwords are not the same',
+    },
   },
 });
 
 const User = mongoose.model('User', userSchema);
-//export the schema
-module.export = User;
+
+module.exports = User;
