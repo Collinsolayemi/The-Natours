@@ -19,16 +19,16 @@ if (process.env.NODE.ENV === 'development') {
 //   next();
 // });
 
-//imported middleware for the routes
+// middleware for the routes url
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 
 //middleware advance error handling
 app.all('*', (req, res, next) => {
-  next(new AppError(`Cant find ${req.originalUrl} on this server!`), 404);
+  next(new AppError(`Cant find ${req.originalUrl} on this server`, 404));
 });
 
 app.use(globalHandlerError);
 
 module.exports = app;
-//200 okay , 201 = created, 404 = err, 204 = delete , 500 = internal server error
+//200 okay , 201 = created, 404 = err, 204 = delete , 500 = internal server error 401= unauthorise 400=bad request

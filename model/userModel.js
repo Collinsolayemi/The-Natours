@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+
 //creating a model for the users
 const userSchema = new mongoose.Schema({
   name: {
@@ -22,6 +23,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Please provide a  password'],
+    select: false,
   },
   confirmPassword: {
     type: String,
@@ -45,6 +47,14 @@ userSchema.pre('save', async function (next) {
   this.confirmPassword = undefined;
   next();
 });
+
+//creating an instance method function to compare user password
+userSchema.method.correctPassword = async function (
+  candidatePassword,
+  userPassword
+) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;
