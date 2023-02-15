@@ -19,6 +19,10 @@ exports.signUp = catchAsync(async (req, res, next) => {
     confirmPassword: req.body.confirmPassword,
   });
 
+  //destructuring because i dont want the password filed to show in response
+  const { password, ...others } = newUser._doc;
+  const user = others;
+
   //creating a token for user when they signup
   const token = signToken(newUser._id);
 
@@ -26,35 +30,35 @@ exports.signUp = catchAsync(async (req, res, next) => {
     status: 'success',
     token,
     data: {
-      user: newUser,
+      user: user,
     },
   });
 });
 
-//creating a login middlware functionality
-exports.login = async (req, res, next) => {
-  const { email } = req.body;
+//creating user login
+exports.login = catchAsync(async (req, res, next) => {
+  const { email, password } = req.body;
 
-  //checking if email and password are inputed
-  // if (!email || !password) {
-  if (!email) {
-    next(new AppError('Please provide email and password!', 400));
+  //check if the email and password was provided ny the user
+  if (!email || !password) {
+    return next(new AppError('Please provide email and password!', 400));
   }
 
-  //check if user and password  exist
-  const currentUser = await User.findById({ id: req.params.id });
-  //.select('+password');
+  //check if the email and password exist and compare the credentials
+  const existingUser = await User.findOne({ email }).select('+password');
 
-  //calling the instance method created in the user model to compare password
-  // if (!user || !(await user.correctPassword(password, user.password))) {
-  //   return next(new AppError('Incorrect email or password', 401));
-  // }
+  //check the existing input are valid
+  if (
+    !existingUser ||
+    !(await existingUser.comparePassword(password, existingUser.password))
+  ) {
+    return next(new AppError('Incorrect email  or password', 401));
+  }
 
-  //send token to the client if password and email are correct
-  // const token = signToken(user._id);
-
+  //if everything is okay send a token
+  const token = signToken(existingUser);
   res.status(200).json({
     status: 'success',
-    currentUser,
+    token,
   });
-};
+});

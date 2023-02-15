@@ -49,11 +49,11 @@ userSchema.pre('save', async function (next) {
 });
 
 //creating an instance method function to compare user password
-userSchema.method.correctPassword = async function (
-  candidatePassword,
-  userPassword
+userSchema.methods.comparePassword = async function (
+  inputPassword,
+  savedPassword
 ) {
-  return await bcrypt.compare(candidatePassword, userPassword);
+  return await bcrypt.compare(inputPassword, savedPassword);
 };
 
 const User = mongoose.model('User', userSchema);
