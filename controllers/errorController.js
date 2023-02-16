@@ -1,7 +1,15 @@
 const AppError = require('../utilities/appError');
 
+//cast error handler when the id is invalid
 const handleCastErrorDb = (err) => {
   const message = `Invalid ${err.path} : ${err.value}`;
+  return new AppError(message, 400);
+};
+
+//duplicate field handler when user input duplicate fields
+const handleDuplicateFields = (err) => {
+  const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
+  const message = `Duplicate field: ${value} . Please input another value`;
   return new AppError(message, 400);
 };
 
@@ -43,6 +51,7 @@ module.exports = (err, req, res, next) => {
   } else if (process.env.NODE_ENV === 'production') {
     let error = { ...err };
     if (error.name === 'CastError') error = handleCastErrorDb(error);
+    if (err.code === 11000) error = handleDuplicateFields(error);
     sendErrorProd(error, res);
   }
 };
