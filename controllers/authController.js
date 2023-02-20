@@ -104,6 +104,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
+//authorization controller for restricted to some action
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
@@ -114,3 +115,21 @@ exports.restrictTo = (...roles) => {
     next();
   };
 };
+
+//password forgotten
+exports.forgetPassword = catchAsync(async (req, res, next) => {
+  //get user
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return next(new AppError('There is no user with email address', 404));
+  }
+
+  //generate the random reset token
+  const resetToken = user.createPasswordResetToken();
+  await user.save({ validateBeforeSave: false });
+
+  //send token to the user gmail
+});
+
+//reset password
+exports.resetPassword = (req, res, next) => {};
