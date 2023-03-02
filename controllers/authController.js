@@ -41,7 +41,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
-  //check if the email and password was provided ny the user
+  //check if the email and password was provided by  the user
   if (!email || !password) {
     return next(new AppError('Please provide email and password!', 400));
   }
@@ -162,4 +162,9 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
 });
 
 //reset password
-exports.resetPassword = (req, res, next) => {};
+exports.resetPassword = (req, res, next) => {
+  //get user base on token
+  //if token have not expire and there is a user, set the new password
+  //update the changed passwordAt for the current user
+  //log the user in , send the JWT
+};

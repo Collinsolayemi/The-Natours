@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema({
   passwordResetExpires: Date,
 });
 
-//hashing the password with bcryptjs
+//hashing the password with bcryptjs, the pre run between creating the data and saving in db
 userSchema.pre('save', async function (next) {
   //only run this function if password was actually modified
   if (!this.isModified('password')) return next();
