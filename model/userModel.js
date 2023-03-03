@@ -46,18 +46,19 @@ const userSchema = new mongoose.Schema({
   passwordResetExpires: Date,
 });
 
-//hashing the password with bcryptjs, the pre run between creating the data and saving in db
+//hashing the password with bcryptjs, the pre run between creating the data and saving data in db
 userSchema.pre('save', async function (next) {
   //only run this function if password was actually modified
   if (!this.isModified('password')) return next();
   //hashing the password with cost of 12
   this.password = await bcrypt.hash(this.password, 12);
-  //we only hash the password not confirm password so we dlete password confirm field
+
+  //hash the password and delete password confirm field
   this.confirmPassword = undefined;
   next();
 });
 
-//creating an instance method function to compare user password
+//instance method to compare user password and db hash password
 userSchema.methods.comparePassword = async function (
   inputPassword,
   savedPassword
@@ -91,5 +92,6 @@ userSchema.methods.createPasswordResetToken = async function () {
   return resetToken;
 };
 
+//exporting the user model
 const User = mongoose.model('User', userSchema);
 module.exports = User;

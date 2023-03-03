@@ -5,7 +5,7 @@ const catchAsync = require('../utilities/catchAsync');
 const AppError = require('../utilities/appError');
 const sendEmail = require('../utilities/email');
 
-//creating a function for the jwt
+// jwt functionality
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
@@ -65,9 +65,9 @@ exports.login = catchAsync(async (req, res, next) => {
   });
 });
 
-// middleware to verify if the user is authorise to grant aceess
+// middleware to verify if user is log in for authorisation to access protected route
 exports.protect = catchAsync(async (req, res, next) => {
-  //Getting the token and checking token if its there
+  //Getting the token and checking if token is there
   let token = '';
   const headersReq = req.headers.authorization;
   if (headersReq && headersReq.startsWith('Bearer')) {
