@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please tell us your name'],
     maxlength: [20, 'A name must have not be more than  20 characters'],
-    minlength: [8, 'A tour must have at least 8 characters'],
+    minlength: [8, 'A name must have at least 8 characters'],
   },
   email: {
     type: String,
@@ -46,6 +46,13 @@ const userSchema = new mongoose.Schema({
   passwordResetExpires: Date,
 });
 
+//implementing when password was changed exactly
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password') || this.isNew) return next();
+
+  this.passwordChangedAt = Date.now();
+});
+
 //hashing the password with bcryptjs, the pre run between creating the data and saving data in db
 userSchema.pre('save', async function (next) {
   //only run this function if password was actually modified
@@ -73,8 +80,9 @@ userSchema.methods.changedPasswordAfter = async function (JWTTimestamp) {
       this.passwordChangedAt.getTime() / 1000,
       10
     );
-    return JWTTimestamp > changedTimeStamp;
+    return JWTTimestamp < changedTimeStamp;
   }
+
   //false means not changed
   return false;
 };

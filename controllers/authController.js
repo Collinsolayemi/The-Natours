@@ -87,20 +87,23 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   //check if the user still exist
   const freshUser = await User.findById(decoded.id);
+
   if (!freshUser) {
     return next(
       new AppError('The user belonging to this token does no longer exist', 401)
     );
   }
+
   //check if user changed password after token was issued
-  if (freshUser.changedPasswordAfter(decoded.iat)) {
-    return next(
-      new AppError(
-        'Password recently changed by the user, Please log in again',
-        401
-      )
-    );
-  }
+  // if (freshUser.changedPasswordAfter(decoded.iat)) {
+  //   return next(
+  //     new AppError(
+  //       'Password recently changed by the user, Please log in again',
+  //       401
+  //     )
+  //   );
+  // }
+
   //Grant access to protected route
   req.user = freshUser;
   next();
@@ -183,7 +186,16 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   }
   user.password = req.body.password;
   user.confirmPassword = req.body.confirmPassword;
+  user.PasswordResetToken = undefined;
+  user.passworkTokenExpires = undefined;
+  user.save();
 
   //update the changed passwordAt for the current user
+
   //log the user in , send the JWT
+  const token = signToken(existingUser);
+  res.status(200).json({
+    status: 'success',
+    token,
+  });
 });
