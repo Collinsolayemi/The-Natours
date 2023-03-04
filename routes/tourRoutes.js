@@ -18,6 +18,7 @@ router
   .patch(tourController.updateTour)
   .delete(
     authController.protect,
+    //only the admin role and lead guide can delete  tour
     authController.restrictTo('admin', 'lead-guide'),
     tourController.deleteTour
   );
