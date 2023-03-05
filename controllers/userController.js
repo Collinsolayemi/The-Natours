@@ -1,3 +1,4 @@
+const AppError = require('../utilities/appError');
 const User = require('./../model/userModel');
 const catchAsync = require('./../utilities/catchAsync');
 
@@ -43,4 +44,14 @@ exports.deleteUser = (req, res) => {
     status: 'error',
     message: 'This route is not yet define',
   });
+};
+
+//updating authentiated user data
+exports.updateMe = async (req, res, next) => {
+  //create error if user tries to update password
+  if (req.body.password || req.body.confirmPassword) {
+    return next(new AppError('you are not allowed', 403));
+  }
+
+  //update user document
 };
