@@ -50,7 +50,7 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save', function (next) {
   if (!this.isModified('password') || this.isNew) return next();
 
-  this.passwordChangedAt = Date.now();
+  this.passwordChangedAt = Date.now() - 1000;
 });
 
 //hashing the password with bcryptjs, the pre run between creating the data and saving data in db
