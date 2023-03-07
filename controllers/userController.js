@@ -2,6 +2,15 @@ const AppError = require('../utilities/appError');
 const User = require('./../model/userModel');
 const catchAsync = require('./../utilities/catchAsync');
 
+//function to filter document user can update
+const filterObj = (obj, ...allowedField) => {
+  const newObj = {};
+  Object.keys(obj).forEach((el) => {
+    if (allowedField.includes(el)) newObj[el] = obj[el];
+  });
+  return newObj;
+};
+
 //controller to get all users
 exports.getAllUser = catchAsync(async (req, res, next) => {
   const users = await User.find();
@@ -47,11 +56,40 @@ exports.deleteUser = (req, res) => {
 };
 
 //updating authentiated user data
-exports.updateMe = async (req, res, next) => {
+exports.updateMe = catchAsync(async (req, res, next) => {
   //create error if user tries to update password
   if (req.body.password || req.body.confirmPassword) {
-    return next(new AppError('you are not allowed', 403));
+    return next(
+      new AppError(
+        'This route is not for password update. please use /updateMyPassword',
+        400
+      )
+    );
   }
 
+  //filter out unwanted fields name that are not allowed to be updated
+  const filterBody = filterObj(req.body, 'name', 'email');
+
   //update user document
-};
+  const updatedUser = await User.findByIdAndUpdate(req.user.id, filterBody, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user: updatedUser,
+    },
+  });
+});
+
+//inactive the user
+exports.deleteMe = catchAsync(async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user.id, { active: false });
+
+  res.status(204).json({
+    status: 'success',
+    data: null,
+  });
+});

@@ -13,9 +13,26 @@ const signToken = (id) => {
   });
 };
 
+//cookie opions
+
 //creating a jwt send token
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
+  //sending cookies as a response
+
+  const cookieOption = {
+    expiresIn: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    secure: true,
+    httpOnly: true,
+  };
+
+  if (process.env.NODE_env === 'production') cookieOption.secure = true;
+
+  res.cookie('jwt', token, cookieOption),
+    //remove password from res body
+    (user.password = undefined);
 
   res.status(statusCode).json({
     status: 'success',

@@ -44,6 +44,11 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
+  active: {
+    type: Boolean,
+    default: true,
+    select: false,
+  },
 });
 
 //implementing when password was changed exactly
@@ -51,6 +56,14 @@ userSchema.pre('save', function (next) {
   if (!this.isModified('password') || this.isNew) return next();
 
   this.passwordChangedAt = Date.now() - 1000;
+});
+
+//query middleware to get the active user when we make a req  to get all users
+userSchema.pre(/^find/, function (next) {
+  //this point to the current query
+  //this.find({ active: true });
+  this.find({ active: { $ne: false } });
+  next();
 });
 
 //hashing the password with bcryptjs, the pre run between creating the data and saving data in db

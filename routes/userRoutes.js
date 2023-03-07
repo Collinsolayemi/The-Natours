@@ -9,6 +9,9 @@ router.patch(
   authController.protect,
   authController.updatePassword
 );
+
+router.delete('/deleteMe', authController.protect, userController.deleteMe);
+router.patch('/updateMe', authController.protect, userController.updateMe);
 router.route('/signup').post(authController.signUp);
 router.route('/login').post(authController.login);
 router.route('/forgetPassword').post(authController.forgetPassword);
