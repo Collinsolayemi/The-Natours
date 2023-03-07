@@ -13,13 +13,11 @@ const signToken = (id) => {
   });
 };
 
-//cookie opions
-
 //creating a jwt send token
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
   //sending cookies as a response
-
+  //cookie opions
   const cookieOption = {
     expiresIn: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
@@ -81,7 +79,7 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   //if everything is okay send a token
-  createSendToken(user, 200, res);
+  createSendToken(existingUser, 200, res);
 });
 
 // middleware to verify if user is log in for authorisation to access protected route
