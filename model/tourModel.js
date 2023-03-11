@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
 const validator = require('validator');
-
+const User = require('./userModel');
 //creating a tour schema
 const tourSchema = new mongoose.Schema(
   {
@@ -103,6 +103,7 @@ const tourSchema = new mongoose.Schema(
         day: Number,
       },
     ],
+    guides: Array,
   },
   {
     toJSON: { virtuals: true },
@@ -111,20 +112,26 @@ const tourSchema = new mongoose.Schema(
 );
 
 // CREATNG DOCUMENT MIDDLEWARE {it work on only .save() and .create()}
-// tourSchema.virtual('durationWeeks').get(function () {
-//   return this.duration / 7;
-// });
+tourSchema.virtual('durationWeeks').get(function () {
+  return this.duration / 7;
+});
 
 //implementing a document middleware which run before data saved in db....save() and .create()
-// tourSchema.pre('save', function (next) {
-// this.slug = slugify(this.name, { lower: true });
-//   next();
-// });
+tourSchema.pre('save', function (next) {
+  this.slug = slugify(this.name, { lower: true });
+  next();
+});
 
-//implementing a document middleware with post method which have access to the doc saved and next
-//the post start after the pre() have finish
+//guides
+tourSchema.pre('save', async function (next) {
+  const guidesPromise = this.guides.map(async (el) => await User.findById(id));
+  this.guides = await Promise.all(guidesPromise);
+  next();
+});
+
+//implementing a document middleware with post method which have access to the doc saved and next the post start after the pre() have finish
 // tourSchema.post('save', function (doc, next) {
-// console.log(doc);
+//   console.log(doc);
 //   next();
 // });
 
