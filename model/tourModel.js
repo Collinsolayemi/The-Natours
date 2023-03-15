@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const slugify = require('slugify');
 const validator = require('validator');
 const User = require('./userModel');
+
+
 //creating a tour schema
 const tourSchema = new mongoose.Schema(
   {
