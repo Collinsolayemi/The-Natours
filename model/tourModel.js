@@ -83,7 +83,7 @@ const tourSchema = new mongoose.Schema(
     },
     startLocation: {
       //geoJSON
-      type: {
+      type: { 
         type: String,
         default: 'Point',
         enum: ['Point'],
@@ -130,6 +130,7 @@ tourSchema.pre('save', function (next) {
 //guides
 tourSchema.pre('save', async function (next) {
   const guidesPromise = this.guides.map(async (el) => await User.findById(id));
+  //promise.all because the result guide promise will return a promise
   this.guides = await Promise.all(guidesPromise);
   next();
 });
