@@ -7,6 +7,7 @@ const dotenv = require('dotenv');
 dotenv.config({ path: './.env' });
 
 const app = require('./apps');
+
 // const DB = process.env.DATABASE.replace(
 //   '<PASSWORD>',
 //   process.env.DATABASE_PASSWORD
@@ -49,3 +50,4 @@ process.on('uncaughtException', (err) => {
     process.exit(1);
   });
 });
+

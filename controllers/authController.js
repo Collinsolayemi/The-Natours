@@ -16,6 +16,8 @@ const signToken = (id) => {
 //creating a jwt send token
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
+
+
   //sending cookies as a response
   //cookie opions
   const cookieOption = {
