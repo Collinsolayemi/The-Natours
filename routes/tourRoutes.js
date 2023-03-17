@@ -27,3 +27,4 @@ router
 router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
 
 module.exports = router;
+
