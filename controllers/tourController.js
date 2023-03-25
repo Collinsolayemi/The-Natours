@@ -35,7 +35,7 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
 
 //controller to get one certain tour
 exports.getOneTour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findById(req.params.id);
+  const tour = await Tour.findById(req.params.id).populate('guide', ()=> {})
   if (!tour) {
     return next(new AppError('No tour found with that ID', 404));
   }
