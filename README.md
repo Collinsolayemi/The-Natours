@@ -17,6 +17,6 @@
 
 ### Getting started
 - clone this repository ```https://github.com/Collinsolayemi/great-natour-express_js-API.git```
-- Install all required dependencies with ```npm install```
+- Install all required dependencies with ```npm install``` or ```npm install --force```
 - Start the application with ```npm run dev```
 
