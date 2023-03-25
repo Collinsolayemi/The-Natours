@@ -7,6 +7,6 @@
 ```Great natour app is an api built using express js and mongo DB with authentication and authorization.
 - A user need to create account
 - A user sign in so he get a token to grant him access to login
-- A user need to be authorizedin oeder to access some certain routes.
+- A user need to be authorized in order to access some certain routes.
 
 ```
