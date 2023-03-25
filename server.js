@@ -13,11 +13,11 @@ const app = require('./apps');
 //   process.env.DATABASE_PASSWORD
 // );
 
-const DB = process.env.DATABASE
+const DB = process.env.DATABASE;
 
 //mongoose connection
 mongoose
-  .connect(DB , {
+  .connect(DB, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
@@ -50,4 +50,3 @@ process.on('uncaughtException', (err) => {
     process.exit(1);
   });
 });
-
