@@ -1,5 +1,5 @@
 
-# GREAT NATOUR APP
+# THE NATOURS
 
 
 ## A project built using `Node.JS` popupar framework `express.JS` with `mongo DB`
