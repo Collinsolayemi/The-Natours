@@ -3,7 +3,6 @@ const slugify = require('slugify');
 const validator = require('validator');
 const User = require('./userModel');
 
-
 //creating a tour schema
 const tourSchema = new mongoose.Schema(
   {
@@ -83,7 +82,7 @@ const tourSchema = new mongoose.Schema(
     },
     startLocation: {
       //geoJSON
-      type: { 
+      type: {
         type: String,
         default: 'Point',
         enum: ['Point'],
@@ -107,8 +106,8 @@ const tourSchema = new mongoose.Schema(
     ],
     guides: {
       type: mongoose.Schema.ObjectId, //the type have to be a mongo db id
-      ref: 'User'
-    }
+      ref: 'User',
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -142,11 +141,18 @@ tourSchema.pre('save', async function (next) {
 // });
 
 //QUERY MIDDLEWARE
-// tourSchema.pre('find', function (next) {  or we use
 tourSchema.pre(/^find/, function (next) {
   //it will work for any find or methos that start with find
   this.find({ secretTour: { $ne: true } });
   this.start = Date.now();
+  next();
+});
+
+tourSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'guides',
+    select: '-_v -passwordChangedAt',
+  });
   next();
 });
 
