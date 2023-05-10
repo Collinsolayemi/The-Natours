@@ -10,7 +10,7 @@ const AppError = require('./utilities/appError');
 const globalHandlerError = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
-const reviewRouter = require('./routes/reviewRoutes');
+const review_router = require('./routes/reviewRoute');
 
 const app = express();
 //middleware
@@ -66,7 +66,7 @@ app.use((req, res, next) => {
 // middleware for the routes url
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
-app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/reviews', review_router);
 
 //middleware advance error handler
 app.all('*', (req, res, next) => {
