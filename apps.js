@@ -20,7 +20,7 @@ const app = express();
 app.use(helmet());
 
 //development logging
-if (process.env.NODE.ENV === 'development') {
+if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev')); //middleware from npm(third-party middleware)
 }
 
