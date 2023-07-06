@@ -17,7 +17,6 @@ const signToken = (id) => {
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
 
-
   //sending cookies as a response
   //cookie opions
   const cookieOption = {
@@ -45,14 +44,22 @@ const createSendToken = (user, statusCode, res) => {
 
 //creating a sign up middleware functionality
 exports.signUp = catchAsync(async (req, res, next) => {
+  //check if the email is already registered
+  const checkEmail = await User.findOne({ email: req.body.email });
+
+  if (checkEmail) {
+    return next(new AppError('Email already register, please sign in', 400));
+  }
+
   const newUser = await User.create({
-    name: req.body.name,
+    userName: req.body.name,
     email: req.body.email,
     password: req.body.password,
     confirmPassword: req.body.confirmPassword,
   });
 
-  //destructuring because i dont want the password filed to show in response
+
+  //destructuring because i dont want the password field to show in response
   const { password, ...others } = newUser._doc;
   const user = others;
 
