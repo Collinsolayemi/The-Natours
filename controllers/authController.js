@@ -58,7 +58,6 @@ exports.signUp = catchAsync(async (req, res, next) => {
     confirmPassword: req.body.confirmPassword,
   });
 
-
   //destructuring because i dont want the password field to show in response
   const { password, ...others } = newUser._doc;
   const user = others;
@@ -119,15 +118,17 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
+  console.log(freshUser);
+
   //check if user changed password after token was issued
-  // if (freshUser.changedPasswordAfter(decoded.iat)) {
-  //   return next(
-  //     new AppError(
-  //       'Password recently changed by the user, Please log in again',
-  //       401
-  //     )
-  //   );
-  // }
+  if (freshUser.changedPasswordAfter(decoded.iat)) {
+    return next(
+      new AppError(
+        'Password recently changed by the user, Please log in again',
+        401
+      )
+    );
+  }
 
   //Grant access to protected route
   req.user = freshUser;
@@ -148,10 +149,12 @@ exports.restrictTo = (...roles) => {
 
 //password forgotten
 exports.forgetPassword = catchAsync(async (req, res, next) => {
-  //get user
+  if (!req.body.email) {
+    return next(new AppError('please input your email', 404))
+  }
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
-    return next(new AppError('There is no user with email address', 404));
+    return next(new AppError('User not found, wrong credencials', 404));
   }
 
   //generate the random reset token
