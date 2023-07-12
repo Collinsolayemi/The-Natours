@@ -150,7 +150,7 @@ exports.restrictTo = (...roles) => {
 //password forgotten
 exports.forgetPassword = catchAsync(async (req, res, next) => {
   if (!req.body.email) {
-    return next(new AppError('please input your email', 404))
+    return next(new AppError('please input your email', 404));
   }
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
@@ -164,10 +164,15 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
   //send token to the user gmail
   const resetURL = `${req.protocol}://${req.get(
     'host'
-  )}/v1/api/users/resetPassword/${resetToken}`;
+  )}/v1/api/users/reset-password/${user.passwordResetToken}`;
 
-  const message = `Forgot your password? submit a PATCH request with your new password and passwordConfirm to: ${resetURL}\nIf you did not forget your password, please ignore this email`;
 
+  const message = `Dear ${user.name},\n\nWe have received a request to reset the password for your Natour account. To ensure the security of your account, we have generated a unique link for you to use.\n\nPlease find your verification link below:
+      \n\n${resetURL}\n\n If you did not initiate this password reset request, please disregard this email and ensure the security of your account by keeping your credentials confidential.
+     \n\n
+     For any further assistance or questions, please do not hesitate to contact our support team at support@natourhotline.info
+     \n\nThank you for using the Natour. \n\nBest regards,\n\nNatour Team.
+     `;
   try {
     await sendEmail({
       email: user.email,
@@ -191,6 +196,7 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
       )
     );
   }
+
 });
 
 //reset password of a current user
