@@ -86,10 +86,15 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
 //inactive the user
 exports.deleteMe = catchAsync(async (req, res, next) => {
-  await User.findByIdAndUpdate(req.user.id, { active: false });
+  //await User.findByIdAndDelete(req.user.id, { active: false });
+  await User.findByIdAndDelete(req.user.id)
+  console.log(req.user.id)
+  
 
   res.status(204).json({
     status: 'success',
     data: null,
   });
 });
+
+

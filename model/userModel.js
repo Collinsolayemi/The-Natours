@@ -5,11 +5,11 @@ const bcrypt = require('bcryptjs');
 
 //creating a model for the users
 const userSchema = new mongoose.Schema({
-  userName: {
+  name: {
     type: String,
-    required: [true, 'username cannot be empty'],
-    maxlength: [20, 'A username must have not be more than  20 characters'],
-    minlength: [8, 'A username must have at least 8 characters'],
+    required: [true, 'name cannot be empty'],
+    maxlength: [20, 'A name must have not be more than  20 characters'],
+    minlength: [8, 'A name must have at least 8 characters'],
   },
   email: {
     type: String,
@@ -110,9 +110,20 @@ userSchema.methods.createPasswordResetToken = async function () {
     .digest('hex');
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
 
+  console.log(resetToken,'///////', this.passwordResetToken)
+
   return resetToken;
 };
 
 //exporting the user model
 const User = mongoose.model('User', userSchema);
 module.exports = User;
+
+
+
+
+
+//9ce83c927745be79e6e76e554c4ef2cb19ba92b22b298ceb0cb7aed94fd4b43b 
+
+
+//5d061a5083ad96e11029f9298f591fb210834e36de26eac1b84666c16814d830

@@ -20,9 +20,8 @@ const createSendToken = (user, statusCode, res) => {
   //sending cookies as a response
   //cookie opions
   const cookieOption = {
-    expiresIn: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ),
+    expiresIn: new Date(),
+    // Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     secure: true,
     httpOnly: true,
   };
@@ -77,7 +76,7 @@ exports.login = catchAsync(async (req, res, next) => {
 
   //check if the email and password exist and compare the credentials
   const existingUser = await User.findOne({ email }).select('+password');
-
+  console.log(existingUser);
   //check the existing input are valid
   if (
     !existingUser ||
@@ -158,14 +157,14 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
   }
 
   //generate the random reset token
-  const resetToken = user.createPasswordResetToken();
+  const resetToken = await user.createPasswordResetToken();
+
   await user.save({ validateBeforeSave: false });
 
   //send token to the user gmail
   const resetURL = `${req.protocol}://${req.get(
     'host'
-  )}/v1/api/users/reset-password/${user.passwordResetToken}`;
-
+  )}/api/v1/users/reset-password/${resetToken}`;
 
   const message = `Dear ${user.name},\n\nWe have received a request to reset the password for your Natour account. To ensure the security of your account, we have generated a unique link for you to use.\n\nPlease find your verification link below:
       \n\n${resetURL}\n\n If you did not initiate this password reset request, please disregard this email and ensure the security of your account by keeping your credentials confidential.
@@ -196,20 +195,18 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
       )
     );
   }
-
 });
 
 //reset password of a current user
 exports.resetPassword = catchAsync(async (req, res, next) => {
-  //get user base on token
   const hashedToken = crypto
     .createHash('sha256')
     .update(req.params.token)
     .digest('hex');
 
   const user = await User.findOne({
-    PasswordResetToken: hashedToken,
-    passworkTokenExpires: {
+    passwordResetToken: hashedToken,
+    passwordResetExpires: {
       $gt: Date.now(),
     },
   });
@@ -220,12 +217,20 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   }
   user.password = req.body.password;
   user.confirmPassword = req.body.confirmPassword;
-  user.PasswordResetToken = undefined;
+  user.passwordResetToken = undefined;
   user.passworkTokenExpires = undefined;
-  user.save();
+  await user.save();
 
   //log the user in , send the JWT
-  createSendToken(user, 200, res);
+  //createSendToken(user, 200, res);
+
+  const token = signToken(user._id);
+
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+
+  });
 });
 
 //change password functionality when a user is logged in
@@ -244,4 +249,6 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   //login user and send jwt
   createSendToken(newUser, 201, res);
+
+
 });
