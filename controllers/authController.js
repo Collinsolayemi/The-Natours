@@ -51,11 +51,13 @@ exports.signUp = catchAsync(async (req, res, next) => {
   }
 
   const newUser = await User.create({
-    userName: req.body.name,
+    name: req.body.name,
     email: req.body.email,
     password: req.body.password,
-    confirmPassword: req.body.confirmPassword,
+    // confirmPassword: req.body.confirmPassword,
   });
+
+  console.log(newUser);
 
   //destructuring because i dont want the password field to show in response
   const { password, ...others } = newUser._doc;
@@ -204,6 +206,8 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     .update(req.params.token)
     .digest('hex');
 
+  
+    
   const user = await User.findOne({
     passwordResetToken: hashedToken,
     passwordResetExpires: {
@@ -211,25 +215,32 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     },
   });
 
+  console.log(user)
+
+  const user2 = await User.findOneAndUpdate({ _id: user._id, password: req.body.password})
+
+ console.log(user2)
+
   //if token have not expire and there is a user, set the new password
   if (!user) {
     return next(new AppError('Token is invalid or expired', 400));
   }
-  user.password = req.body.password;
-  user.confirmPassword = req.body.confirmPassword;
-  user.passwordResetToken = undefined;
-  user.passworkTokenExpires = undefined;
-  await user.save();
+  //user.password = req.body.password;
+  // user.confirmPassword = req.body.confirmPassword;
+  // user.passwordResetToken = undefined;
+  // user.passworkResetExpires = undefined;
+  await user2.save();
+
+
 
   //log the user in , send the JWT
   //createSendToken(user, 200, res);
 
-  const token = signToken(user._id);
+  const token = signToken(user2._id);
 
-  res.status(statusCode).json({
+  res.status(200).json({
     status: 'success',
     token,
-
   });
 });
 
@@ -249,6 +260,4 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   //login user and send jwt
   createSendToken(newUser, 201, res);
-
-
 });
