@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'name cannot be empty'],
     maxlength: [20, 'A name must have not be more than  20 characters'],
-    minlength: [8, 'A name must have at least 8 characters'],
+    minlength: [5, 'A name must have at least 8 characters'],
   },
   email: {
     type: String,
@@ -29,7 +29,6 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Please provide a  password'],
-    //select: false,
   },
   // confirmPassword: {
   //   type: String,
@@ -74,7 +73,7 @@ userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, 12);
 
   //hash the password and delete password confirm field
-  this.confirmPassword = undefined;
+  //this.confirmPassword = undefined;
   next();
 });
 
@@ -108,9 +107,9 @@ userSchema.methods.createPasswordResetToken = async function () {
     .createHash('sha256')
     .update(resetToken)
     .digest('hex');
-  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+  this.passwordResetExpires = Date.now() + 60 * 60 * 1000;
 
-  console.log(resetToken,'///////', this.passwordResetToken)
+  //console.log(resetToken);
 
   return resetToken;
 };
@@ -120,10 +119,3 @@ const User = mongoose.model('User', userSchema);
 module.exports = User;
 
 
-
-
-
-//9ce83c927745be79e6e76e554c4ef2cb19ba92b22b298ceb0cb7aed94fd4b43b 
-
-
-//5d061a5083ad96e11029f9298f591fb210834e36de26eac1b84666c16814d830

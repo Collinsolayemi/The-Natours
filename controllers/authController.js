@@ -5,6 +5,7 @@ const User = require('../model/userModel');
 const catchAsync = require('../utilities/catchAsync');
 const AppError = require('../utilities/appError');
 const sendEmail = require('../utilities/email');
+const bcrypt = require('bcryptjs');
 
 // jwt functionality
 const signToken = (id) => {
@@ -57,8 +58,6 @@ exports.signUp = catchAsync(async (req, res, next) => {
     // confirmPassword: req.body.confirmPassword,
   });
 
-  console.log(newUser);
-
   //destructuring because i dont want the password field to show in response
   const { password, ...others } = newUser._doc;
   const user = others;
@@ -78,7 +77,6 @@ exports.login = catchAsync(async (req, res, next) => {
 
   //check if the email and password exist and compare the credentials
   const existingUser = await User.findOne({ email }).select('+password');
-  console.log(existingUser);
   //check the existing input are valid
   if (
     !existingUser ||
@@ -206,37 +204,30 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     .update(req.params.token)
     .digest('hex');
 
+  const user = await User.findOne({ passwordResetToken: hashedToken });
   
-    
-  const user = await User.findOne({
-    passwordResetToken: hashedToken,
-    passwordResetExpires: {
-      $gt: Date.now(),
-    },
-  });
-
-  console.log(user)
-
-  const user2 = await User.findOneAndUpdate({ _id: user._id, password: req.body.password})
-
- console.log(user2)
 
   //if token have not expire and there is a user, set the new password
   if (!user) {
-    return next(new AppError('Token is invalid or expired', 400));
+    return next(new AppError('Token is invalid or expired nn', 400));
   }
-  //user.password = req.body.password;
-  // user.confirmPassword = req.body.confirmPassword;
-  // user.passwordResetToken = undefined;
-  // user.passworkResetExpires = undefined;
-  await user2.save();
 
+  //Hashing the password before saving to DB
+  const hashedPassword = await bcrypt.hash(req.body.password, 12)
 
+  const newUser = await User.findOneAndUpdate(
+    {
+      passwordResetToken: hashedToken,
+      passwordResetExpires: { $gt: Date.now() },
+    },
+    {
+      $set: { password: hashedPassword },
+      $unset: { passwordResetExpires: 1 },
+      $unset: { passwordResetToken: 1 },
+    }
+  );
 
-  //log the user in , send the JWT
-  //createSendToken(user, 200, res);
-
-  const token = signToken(user2._id);
+  const token = signToken(newUser._id);
 
   res.status(200).json({
     status: 'success',
@@ -246,18 +237,5 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
 //change password functionality when a user is logged in
 exports.updatePassword = catchAsync(async (req, res, next) => {
-  //get the user
-  const user = await User.findById(req.user.id).select('+password');
 
-  //check if password input by user is correct
-  if (!(await user.comparePassword(req.body.passwordCurrent, user.password))) {
-    return next(new AppError('Password incrrect', 401));
-  }
-  //if everything is okay, update password
-  user.password = req.body.password;
-  user.confirmPassword = req.body.confirmPassword;
-  await user.save();
-
-  //login user and send jwt
-  createSendToken(newUser, 201, res);
 });
