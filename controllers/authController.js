@@ -55,15 +55,15 @@ exports.signUp = catchAsync(async (req, res, next) => {
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
-    // confirmPassword: req.body.confirmPassword,
   });
 
   //destructuring because i dont want the password field to show in response
-  const { password, ...others } = newUser._doc;
-  const user = others;
+ // const { password, ...others } = newUser._doc;
+ // const user = others;
 
   //creating a token for user when they signup
   createSendToken(newUser, 201, res);
+
 });
 
 //creating user login
@@ -205,7 +205,6 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     .digest('hex');
 
   const user = await User.findOne({ passwordResetToken: hashedToken });
-  
 
   //if token have not expire and there is a user, set the new password
   if (!user) {
@@ -213,7 +212,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   }
 
   //Hashing the password before saving to DB
-  const hashedPassword = await bcrypt.hash(req.body.password, 12)
+  const hashedPassword = await bcrypt.hash(req.body.password, 12);
 
   const newUser = await User.findOneAndUpdate(
     {
@@ -227,6 +226,8 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     }
   );
 
+  console.log(newUser);
+
   const token = signToken(newUser._id);
 
   res.status(200).json({
@@ -236,6 +237,4 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 });
 
 //change password functionality when a user is logged in
-exports.updatePassword = catchAsync(async (req, res, next) => {
-
-});
+exports.updatePassword = catchAsync(async (req, res, next) => {});
