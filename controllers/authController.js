@@ -58,12 +58,11 @@ exports.signUp = catchAsync(async (req, res, next) => {
   });
 
   //destructuring because i dont want the password field to show in response
- // const { password, ...others } = newUser._doc;
- // const user = others;
+  // const { password, ...others } = newUser._doc;
+  // const user = others;
 
   //creating a token for user when they signup
   createSendToken(newUser, 201, res);
-
 });
 
 //creating user login
@@ -108,6 +107,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   //token verification
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
+  console.log(decoded);
   //check if the user still exist
   const freshUser = await User.findById(decoded.id);
 
@@ -117,20 +117,19 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  console.log(freshUser);
-
   //check if user changed password after token was issued
-  if (freshUser.changedPasswordAfter(decoded.iat)) {
-    return next(
-      new AppError(
-        'Password recently changed by the user, Please log in again',
-        401
-      )
-    );
-  }
+  // if (freshUser.changedPasswordAfter(decoded.iat)) {
+  //   return next(
+  //     new AppError(
+  //       'Password recently changed by the user, Please log in again',
+  //       401
+  //     )
+  //   );
+  // }
 
   //Grant access to protected route
   req.user = freshUser;
+
   next();
 });
 
@@ -226,7 +225,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     }
   );
 
-  console.log(newUser);
+
 
   const token = signToken(newUser._id);
 
