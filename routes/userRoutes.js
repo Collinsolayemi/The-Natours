@@ -16,7 +16,7 @@ router.patch(
 );
 
 router.delete('/deleteMe', authController.protect, userController.deleteMe);
-router.patch('/updateMe', authController.protect, userController.updateMe);
+router.patch('/updateMe',upload.single('photo') , authController.protect, userController.updateMe);
 router.route('/signup').post(authController.signUp);
 router.route('/login').post(authController.login);
 router.route('/forget-password').post(authController.forgetPassword);
