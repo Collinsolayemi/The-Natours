@@ -33,6 +33,7 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
+//middlewre  to populate the tour and user who created the tour review
 reviewSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'tour',
@@ -40,7 +41,7 @@ reviewSchema.pre(/^find/, function (next) {
   }).populate({
     path: 'user',
     select: 'name photo',
-  })
+  });
 
   next();
 });

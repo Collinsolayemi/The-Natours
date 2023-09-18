@@ -115,6 +115,7 @@ const tourSchema = new mongoose.Schema(
   }
 );
 
+//VIRTUAL POPULATE
 // CREATNG DOCUMENT MIDDLEWARE {it work on only .save() and .create()}
 tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
