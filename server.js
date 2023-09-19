@@ -22,6 +22,8 @@ mongoose
     useCreateIndex: true,
     useFindAndModify: false,
     useUnifiedTopology: true,
+    tls: true,
+    tlsAllowInvalidCertificates: true
   })
   .then(() => console.log('DB connected'));
 
