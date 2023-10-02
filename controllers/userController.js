@@ -57,6 +57,8 @@ exports.deleteUser = (req, res) => {
 
 //updating authentiated user data
 exports.updateMe = catchAsync(async (req, res, next) => {
+  console.log(req.file)
+  console.log(req.body)
   //create error if user tries to update password
   if (req.body.password || req.body.confirmPassword) {
     return next(

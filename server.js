@@ -8,29 +8,19 @@ dotenv.config({ path: './.env' });
 
 const app = require('./apps');
 
-// const DB = process.env.DATABASE.replace(
-//   '<PASSWORD>',
-//   process.env.DATABASE_PASSWORD
-// );
-
 const DB = process.env.DATABASE;
 
-//mongoose connection
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
     useUnifiedTopology: true,
-    tls: true,
-    tlsAllowInvalidCertificates: true
   })
-  .then(() => console.log('DB connected'));
-
-// const testTour = new Tour({
-//   name: 'The Sailing Ship',
-//   price: 345,
-// });
+  .then(() => console.log('DB connected'))
+  .catch((err) => {
+    console.log('MongoDB connection error', err);
+  });
 
 //starting the server
 const port = process.env.PORT || 3000;
